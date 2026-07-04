@@ -1,0 +1,42 @@
+AGENTROPOLIS-SOVEREIGNTY
+Copyright 2024-2026 Agentropolis Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+---
+
+TRADEMARK AND IDENTITY NOTICE
+
+Agentropolis names, lore, visual identity, trademarks, private operating
+procedures, and unreleased strategy are NOT licensed for reuse under Apache 2.0
+or any other license in this repository unless explicitly stated in a separate
+written agreement.
+
+This includes but is not limited to:
+- The "Agentropolis" name and all associated branding
+- Visual design, logos, and iconography
+- World-building lore, narrative, and fictional elements
+- Internal operating procedures and private governance documents
+- Unreleased product strategy or roadmap information
+
+The Apache 2.0 license in this repository applies to the doctrine text,
+schemas, and example content contained herein. It does not grant rights
+to the above-listed elements.
+
+---
+
+THIRD-PARTY NOTICES
+
+This repository does not bundle third-party software or content at this time.
+If third-party content is added in future contributions, corresponding notices
+will be added to this file.

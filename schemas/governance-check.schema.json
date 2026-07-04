@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentropolis.example/schemas/governance-check.schema.json",
+  "title": "GovernanceCheck",
+  "description": "An auditable governance check record. Documents that a sovereignty-relevant action was reviewed against applicable rules, permissions, and safety boundaries before execution.",
+  "type": "object",
+  "required": ["id", "checkType", "subject", "checkedBy", "timestamp", "outcome"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this governance check record.",
+      "examples": ["urn:uuid:gov-check-0001"]
+    },
+    "checkType": {
+      "type": "string",
+      "description": "The type of governance check performed.",
+      "enum": [
+        "permission-validation",
+        "authority-envelope-check",
+        "public-safety-boundary-check",
+        "interoperability-contract-check",
+        "data-minimization-check",
+        "consent-verification",
+        "delegation-chain-validation",
+        "memory-access-check",
+        "escalation-trigger-check"
+      ]
+    },
+    "subject": {
+      "type": "object",
+      "description": "The entity or action being checked.",
+      "required": ["entityId", "action"],
+      "properties": {
+        "entityId": {
+          "type": "string",
+          "description": "The identifier of the entity (agent, robot, system) being checked."
+        },
+        "action": {
+          "type": "string",
+          "description": "The action or operation that triggered this governance check."
+        },
+        "targetResource": {
+          "type": "string",
+          "description": "The resource or entity the action is directed at."
+        },
+        "context": {
+          "type": "object",
+          "description": "Additional context relevant to the check.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "checkedBy": {
+      "type": "string",
+      "description": "The identifier of the system or entity that performed this check (e.g., a policy engine, a governance agent)."
+    },
+    "rulesApplied": {
+      "type": "array",
+      "description": "References to the rules, policies, or contracts evaluated during this check.",
+      "items": {
+        "type": "object",
+        "required": ["ruleId", "result"],
+        "properties": {
+          "ruleId": {
+            "type": "string",
+            "description": "Identifier of the rule or policy."
+          },
+          "ruleName": {
+            "type": "string",
+            "description": "Human-readable name of the rule."
+          },
+          "result": {
+            "type": "string",
+            "description": "Result of evaluating this rule.",
+            "enum": ["pass", "fail", "not-applicable", "escalation-required"]
+          },
+          "reason": {
+            "type": "string",
+            "description": "Explanation of why this rule passed or failed."
+          }
+        }
+      }
+    },
+    "outcome": {
+      "type": "string",
+      "description": "The overall outcome of this governance check.",
+      "enum": ["approved", "denied", "escalated", "conditional-approval"]
+    },
+    "conditions": {
+      "type": "array",
+      "description": "Conditions attached to a conditional-approval outcome.",
+      "items": { "type": "string" }
+    },
+    "escalationTarget": {
+      "type": "string",
+      "description": "If outcome is 'escalated', the identifier of the party the decision is escalated to."
+    },
+    "overrideBy": {
+      "type": "string",
+      "description": "If a human or higher authority overrode the check result, their identifier."
+    },
+    "overrideReason": {
+      "type": "string",
+      "description": "Reason for the override, if applicable."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this governance check was performed."
+    },
+    "retentionPeriod": {
+      "type": "string",
+      "description": "How long this governance check record must be retained for audit purposes. ISO 8601 duration.",
+      "examples": ["P2Y", "P7Y"]
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://agentropolis.example/schemas/agent-authority.schema.json",
+  "$comment": "Sample agent authority envelope. All values are illustrative placeholders. No real credentials, keys, or production logic.",
+  "id": "urn:uuid:auth-agent-sample-001",
+  "agentId": "did:example:agent-research-assistant-7",
+  "principalId": "did:example:alice-individual-123",
+  "principalChain": [
+    "did:example:alice-individual-123"
+  ],
+  "scope": {
+    "systems": [
+      "did:example:alice-calendar-service",
+      "did:example:alice-notes-service",
+      "did:example:public-web-search"
+    ],
+    "dataCategories": [
+      "calendar-events",
+      "research-notes",
+      "public-web-content"
+    ],
+    "memoryAccess": "principal-authorized",
+    "externalComms": false
+  },
+  "actions": [
+    {
+      "action": "read-calendar",
+      "limits": {
+        "lookAheadDays": 30
+      },
+      "requiresApproval": false
+    },
+    {
+      "action": "create-calendar-event",
+      "limits": {
+        "maxEventsPerDay": 3
+      },
+      "requiresApproval": true
+    },
+    {
+      "action": "append-research-note",
+      "limits": {
+        "maxNoteLengthChars": 2000
+      },
+      "requiresApproval": false
+    },
+    {
+      "action": "web-search",
+      "limits": {
+        "maxQueriesPerSession": 20
+      },
+      "requiresApproval": false
+    }
+  ],
+  "prohibitions": [
+    "send-email-on-behalf",
+    "delete-any-data",
+    "share-data-with-third-parties",
+    "modify-identity-record",
+    "create-sub-agents"
+  ],
+  "escalationPolicy": {
+    "escalateTo": "did:example:alice-individual-123",
+    "escalationMethod": "notification",
+    "defaultOnEscalation": "abort"
+  },
+  "memoryPolicy": {
+    "retainSessionMemory": false,
+    "shareMemoryWith": [],
+    "memoryDispositionOnTermination": "delete"
+  },
+  "subDelegation": {
+    "permitted": false,
+    "maxDepth": 0,
+    "requiresPrincipalApproval": true
+  },
+  "issued": "2025-06-01T08:00:00Z",
+  "expires": "2025-09-01T08:00:00Z",
+  "revoked": false,
+  "auditLog": "urn:example:audit-log-agent-research-assistant-7"
+}

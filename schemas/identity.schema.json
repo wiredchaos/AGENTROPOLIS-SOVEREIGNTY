@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentropolis.example/schemas/identity.schema.json",
+  "title": "SovereignIdentity",
+  "description": "A sovereign identity record for any entity type: individual, organization, agent, robot, or system.",
+  "type": "object",
+  "required": ["id", "entityType", "controller", "created"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "A globally unique, persistent identifier for this entity. Recommended: W3C DID (e.g., 'did:example:123') or URN.",
+      "examples": ["did:example:alice123", "urn:uuid:550e8400-e29b-41d4-a716-446655440000"]
+    },
+    "entityType": {
+      "type": "string",
+      "description": "The class of sovereign entity this identity represents.",
+      "enum": ["individual", "organization", "agent", "robot", "b2b-system", "b2ai-system"]
+    },
+    "displayName": {
+      "type": "string",
+      "description": "A human-readable name for this entity. May be a pseudonym or role name."
+    },
+    "controller": {
+      "type": "string",
+      "description": "The identifier of the entity that controls this identity record. For individuals, this is typically the same as 'id'. For agents, this is the principal's identifier.",
+      "examples": ["did:example:alice123"]
+    },
+    "verificationMethods": {
+      "type": "array",
+      "description": "Cryptographic or other methods that can be used to verify claims made by this identity.",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "controller"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for this verification method, typically a fragment of the entity's DID."
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of verification method (e.g., 'Ed25519VerificationKey2020', 'JsonWebKey2020')."
+          },
+          "controller": {
+            "type": "string",
+            "description": "The identifier of the entity that controls this key."
+          },
+          "publicKeyMultibase": {
+            "type": "string",
+            "description": "The public key encoded in multibase format (if applicable)."
+          }
+        }
+      }
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Disclosed identity attributes. Only include what the entity has chosen to share. Each attribute should carry a disclosure policy.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value"],
+        "properties": {
+          "value": {
+            "description": "The attribute value."
+          },
+          "disclosurePolicy": {
+            "type": "string",
+            "description": "Who may see this attribute.",
+            "enum": ["public", "authenticated", "named-parties", "private"]
+          }
+        }
+      }
+    },
+    "principalChain": {
+      "type": "array",
+      "description": "For agents and robots: the chain of principals that authorized this entity, from root sovereign to immediate delegator.",
+      "items": {
+        "type": "string",
+        "description": "Identifier of a principal in the chain."
+      }
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this identity record was created."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this identity record was last updated."
+    },
+    "status": {
+      "type": "string",
+      "description": "Current status of this identity.",
+      "enum": ["active", "suspended", "revoked", "expired"],
+      "default": "active"
+    }
+  },
+  "additionalProperties": false
+}

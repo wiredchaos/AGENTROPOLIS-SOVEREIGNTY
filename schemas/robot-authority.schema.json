@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentropolis.example/schemas/robot-authority.schema.json",
+  "title": "RobotAuthority",
+  "description": "The authority envelope for an embodied AI robot. Extends agent authority with physical-world bounds and unconditional safety constraints.",
+  "type": "object",
+  "required": ["id", "robotId", "principalId", "physicalDomain", "actions", "failSafeState", "issued", "expires"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this robot authority envelope.",
+      "examples": ["urn:uuid:robot-auth-0001"]
+    },
+    "robotId": {
+      "type": "string",
+      "description": "The verifiable identifier of the robot system receiving this authority.",
+      "examples": ["did:example:robot-unit-42"]
+    },
+    "principalId": {
+      "type": "string",
+      "description": "The sovereign identifier of the principal granting this authority.",
+      "examples": ["did:example:organization-xyz"]
+    },
+    "principalChain": {
+      "type": "array",
+      "description": "The full delegation chain from root sovereign to immediate grantor.",
+      "items": { "type": "string" }
+    },
+    "physicalDomain": {
+      "type": "object",
+      "description": "The physical or operational space in which the robot is authorized to act.",
+      "required": ["description"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the authorized operating area."
+        },
+        "geofence": {
+          "type": "object",
+          "description": "Optional structured boundary. Use GeoJSON or a reference to a boundary specification.",
+          "additionalProperties": true
+        },
+        "accessLevel": {
+          "type": "string",
+          "description": "Authorization level within the physical domain.",
+          "enum": ["restricted-path", "zone", "full-site", "public-space"]
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "description": "Physical or digital actions the robot is authorized to take.",
+      "items": {
+        "type": "object",
+        "required": ["action"],
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "The action name (e.g., 'navigate', 'grasp-object', 'scan-environment', 'open-door')."
+          },
+          "actuationLimits": {
+            "type": "object",
+            "description": "Physical limits on this action (e.g., max speed, max force, max reach).",
+            "additionalProperties": true
+          },
+          "humanContactPermitted": {
+            "type": "boolean",
+            "description": "Whether this action may involve physical contact with humans.",
+            "default": false
+          },
+          "requiresApproval": {
+            "type": "boolean",
+            "description": "Whether this action requires real-time human approval.",
+            "default": false
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "unconditionalConstraints": {
+      "type": "object",
+      "description": "Safety constraints that cannot be overridden by any instruction, regardless of source.",
+      "$comment": "These constraints are required and structurally guaranteed. They reflect the public safety boundary doctrine.",
+      "properties": {
+        "noHarmToHumans": {
+          "type": "boolean",
+          "description": "The robot must never take actions designed to harm humans.",
+          "const": true
+        },
+        "emergencyStopCompliance": {
+          "type": "boolean",
+          "description": "The robot must comply with an emergency stop signal from any authorized party.",
+          "const": true
+        },
+        "failSafeOnLostComms": {
+          "type": "boolean",
+          "description": "The robot must enter its fail-safe state if communication with the principal is lost.",
+          "const": true
+        }
+      }
+    },
+    "failSafeState": {
+      "type": "object",
+      "description": "The state the robot enters when authority is unclear, communication is lost, or an emergency stop is triggered.",
+      "required": ["behavior"],
+      "properties": {
+        "behavior": {
+          "type": "string",
+          "description": "The fail-safe behavior.",
+          "enum": ["halt-in-place", "return-to-base", "slow-and-await", "power-down"]
+        },
+        "alertPrincipal": {
+          "type": "boolean",
+          "description": "Whether the robot should alert the principal when entering fail-safe state.",
+          "default": true
+        },
+        "maxFailSafeDuration": {
+          "type": "string",
+          "description": "Maximum time to remain in fail-safe state before escalating. ISO 8601 duration.",
+          "examples": ["PT30M", "PT2H"]
+        }
+      }
+    },
+    "emergencyStopAuthorities": {
+      "type": "array",
+      "description": "Identifiers of entities authorized to trigger an emergency stop on this robot.",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "environmentalOverrides": {
+      "type": "array",
+      "description": "Conditions that automatically halt or restrict the robot regardless of current task.",
+      "items": {
+        "type": "object",
+        "required": ["condition", "response"],
+        "properties": {
+          "condition": {
+            "type": "string",
+            "description": "Description of the environmental condition (e.g., 'human detected in restricted zone')."
+          },
+          "response": {
+            "type": "string",
+            "description": "Required robot response.",
+            "enum": ["halt", "slow", "reroute", "alert", "abort-task"]
+          }
+        }
+      }
+    },
+    "issued": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this authority envelope was issued."
+    },
+    "expires": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this authority expires."
+    },
+    "revoked": {
+      "type": "boolean",
+      "description": "Whether this authority has been revoked.",
+      "default": false
+    },
+    "auditLog": {
+      "type": "string",
+      "description": "URI or identifier of the audit log for this robot's actions."
+    }
+  },
+  "additionalProperties": false
+}

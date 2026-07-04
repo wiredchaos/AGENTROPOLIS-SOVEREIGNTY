@@ -1,0 +1,79 @@
+{
+  "$schema": "https://agentropolis.example/schemas/interoperability.schema.json",
+  "$comment": "Sample B2AI interoperability contract. All values are illustrative placeholders. No real credentials, API keys, endpoints, or production data.",
+  "id": "urn:uuid:interop-b2ai-sample-001",
+  "parties": [
+    {
+      "id": "did:example:organization-acme-corp",
+      "role": "consumer",
+      "authorizedAgents": [
+        "did:example:acme-data-pipeline-agent"
+      ]
+    },
+    {
+      "id": "did:example:ai-provider-analytica",
+      "role": "provider",
+      "authorizedAgents": [
+        "did:example:analytica-api-gateway-agent"
+      ]
+    }
+  ],
+  "scope": {
+    "dataCategories": [
+      "anonymized-customer-interaction-summaries",
+      "product-usage-telemetry-aggregates"
+    ],
+    "capabilities": [
+      "sentiment-analysis-api",
+      "trend-detection-api"
+    ],
+    "excludedData": [
+      "personally-identifiable-information",
+      "financial-records",
+      "authentication-credentials",
+      "raw-conversation-transcripts"
+    ]
+  },
+  "purpose": "Aggregate trend analysis and sentiment scoring for product improvement. Data may not be used for targeted advertising, model training for third parties, or re-identification of individuals.",
+  "mode": "pull",
+  "prohibitions": [
+    "no-secondary-sale-of-data",
+    "no-model-training-on-acme-data-without-written-consent",
+    "no-re-identification-attempts",
+    "no-sharing-with-acme-competitors",
+    "no-use-for-targeted-advertising"
+  ],
+  "auditRights": {
+    "logRetentionPeriod": "P1Y",
+    "auditableBy": [
+      "did:example:organization-acme-corp",
+      "did:example:acme-appointed-auditor"
+    ],
+    "auditFrequency": "quarterly"
+  },
+  "retentionPolicy": {
+    "maxRetentionDuration": "P30D",
+    "deleteOnContractExpiry": true,
+    "deleteConfirmationRequired": true
+  },
+  "terminationTerms": {
+    "noticePeriod": "P30D",
+    "immediateTerminationTriggers": [
+      "breach-of-data-prohibitions",
+      "unauthorized-data-sharing",
+      "insolvency-of-provider"
+    ],
+    "dataDispositionOnTermination": "delete"
+  },
+  "issued": "2025-07-01T00:00:00Z",
+  "expires": "2026-07-01T00:00:00Z",
+  "terminated": false,
+  "_governanceNote": {
+    "approvedBy": "did:example:acme-data-governance-officer",
+    "reviewCycle": "annual",
+    "lastReviewed": "2025-07-01",
+    "relatedGovernanceChecks": [
+      "urn:uuid:gov-check-acme-analytica-2025-07-01"
+    ]
+  }
+}

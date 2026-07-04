@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentropolis.example/schemas/memory.schema.json",
+  "title": "MemoryRecord",
+  "description": "A sovereign memory record. Defines ownership, consent, and access controls for a discrete unit of AI-accessible memory.",
+  "type": "object",
+  "required": ["id", "owner", "content", "contentType", "created", "consentBasis"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "A unique identifier for this memory record.",
+      "examples": ["urn:uuid:a3d2f1b4-0001-0001-0001-000000000001"]
+    },
+    "owner": {
+      "type": "string",
+      "description": "The sovereign identifier of the entity that owns this memory. The owner has primacy over retention, access, and deletion.",
+      "examples": ["did:example:alice123"]
+    },
+    "custodian": {
+      "type": "string",
+      "description": "The identifier of the system or entity currently holding this memory in trust for the owner. May differ from owner.",
+      "examples": ["did:example:aiplatform456"]
+    },
+    "content": {
+      "type": "string",
+      "description": "The memory content. May be a plain text summary, a structured JSON string, or a reference URI to content stored elsewhere."
+    },
+    "contentType": {
+      "type": "string",
+      "description": "The media type or category of the memory content.",
+      "enum": [
+        "conversation-summary",
+        "preference",
+        "behavioral-pattern",
+        "decision-context",
+        "task-history",
+        "relationship-context",
+        "knowledge-fragment",
+        "reference-uri",
+        "other"
+      ]
+    },
+    "consentBasis": {
+      "type": "object",
+      "description": "The basis on which this memory was created and may be retained.",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The legal or policy basis for holding this memory.",
+          "enum": ["explicit-consent", "legitimate-interest", "contract-performance", "legal-obligation", "vital-interest", "public-task"]
+        },
+        "consentTimestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the owner consented to this memory being created (if type is explicit-consent)."
+        },
+        "consentReference": {
+          "type": "string",
+          "description": "Reference to the consent record or policy under which this memory is held."
+        }
+      }
+    },
+    "accessPolicy": {
+      "type": "object",
+      "description": "Who may access this memory and under what conditions.",
+      "properties": {
+        "authorizedReaders": {
+          "type": "array",
+          "description": "List of entity identifiers authorized to read this memory.",
+          "items": { "type": "string" }
+        },
+        "authorizedAgents": {
+          "type": "array",
+          "description": "List of agent identifiers that may use this memory in their operations.",
+          "items": { "type": "string" }
+        },
+        "readConditions": {
+          "type": "string",
+          "description": "Human-readable description of conditions under which read access is permitted."
+        }
+      }
+    },
+    "retentionPolicy": {
+      "type": "object",
+      "description": "How long this memory may be retained.",
+      "properties": {
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time after which this memory must be deleted."
+        },
+        "retentionBasis": {
+          "type": "string",
+          "description": "Why this memory is retained for the specified period."
+        },
+        "autoDelete": {
+          "type": "boolean",
+          "description": "Whether the custodian should automatically delete this memory at expiry.",
+          "default": true
+        }
+      }
+    },
+    "portability": {
+      "type": "object",
+      "description": "Controls for owner-initiated data portability.",
+      "properties": {
+        "exportable": {
+          "type": "boolean",
+          "description": "Whether the owner may export this memory record.",
+          "default": true
+        },
+        "exportFormats": {
+          "type": "array",
+          "description": "Formats in which this memory may be exported.",
+          "items": { "type": "string" },
+          "examples": [["json", "csv", "plain-text"]]
+        }
+      }
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this memory record was created."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this memory record was last updated."
+    },
+    "tags": {
+      "type": "array",
+      "description": "Optional tags for categorizing or searching memory records.",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

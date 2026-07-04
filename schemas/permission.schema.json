@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentropolis.example/schemas/permission.schema.json",
+  "title": "Permission",
+  "description": "A bounded, revocable permission grant. Defines what a grantee may do within a grantor's sovereign domain.",
+  "type": "object",
+  "required": ["id", "grantor", "grantee", "scope", "actions", "issued", "expires"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this permission grant.",
+      "examples": ["urn:uuid:perm-0001-0001-0001"]
+    },
+    "grantor": {
+      "type": "string",
+      "description": "The sovereign identifier of the entity granting this permission.",
+      "examples": ["did:example:alice123"]
+    },
+    "grantee": {
+      "type": "string",
+      "description": "The identifier of the entity receiving this permission.",
+      "examples": ["did:example:agent-bob"]
+    },
+    "granteeType": {
+      "type": "string",
+      "description": "The type of the grantee entity.",
+      "enum": ["individual", "organization", "agent", "robot", "b2b-system", "b2ai-system"]
+    },
+    "scope": {
+      "type": "array",
+      "description": "The resources or domains to which this permission applies. Use URIs or structured identifiers.",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "examples": [["did:example:alice123/memory", "did:example:alice123/calendar"]]
+    },
+    "actions": {
+      "type": "array",
+      "description": "The specific actions the grantee is permitted to perform.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "read",
+          "write",
+          "delete",
+          "execute",
+          "delegate",
+          "query",
+          "subscribe",
+          "export",
+          "import"
+        ]
+      },
+      "minItems": 1
+    },
+    "conditions": {
+      "type": "object",
+      "description": "Optional conditions that constrain when or how the permission may be exercised.",
+      "properties": {
+        "timeWindows": {
+          "type": "array",
+          "description": "Time windows during which this permission is active (e.g., business hours only).",
+          "items": {
+            "type": "object",
+            "properties": {
+              "daysOfWeek": {
+                "type": "array",
+                "items": { "type": "string", "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] }
+              },
+              "startTime": { "type": "string", "description": "HH:MM UTC" },
+              "endTime": { "type": "string", "description": "HH:MM UTC" }
+            }
+          }
+        },
+        "maxUses": {
+          "type": "integer",
+          "description": "Maximum number of times this permission may be exercised. Omit for unlimited.",
+          "minimum": 1
+        },
+        "requireApprovalAbove": {
+          "type": "object",
+          "description": "Require grantor approval for actions that exceed specified thresholds.",
+          "additionalProperties": true
+        },
+        "purpose": {
+          "type": "string",
+          "description": "The stated purpose for which this permission is granted. Grantee should only exercise permission for this purpose."
+        }
+      }
+    },
+    "subdelegatable": {
+      "type": "boolean",
+      "description": "Whether the grantee may delegate this permission to other entities. Defaults to false.",
+      "default": false
+    },
+    "issued": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this permission was issued."
+    },
+    "expires": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this permission expires. All permissions must have an expiry."
+    },
+    "revoked": {
+      "type": "boolean",
+      "description": "Whether this permission has been revoked before its expiry.",
+      "default": false
+    },
+    "revokedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this permission was revoked, if applicable."
+    },
+    "auditRequired": {
+      "type": "boolean",
+      "description": "Whether the grantee must maintain an audit log of actions taken under this permission.",
+      "default": true
+    },
+    "parentPermission": {
+      "type": "string",
+      "description": "If this permission was sub-delegated, the identifier of the parent permission."
+    }
+  },
+  "additionalProperties": false
+}

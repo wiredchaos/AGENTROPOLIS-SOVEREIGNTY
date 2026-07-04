@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentropolis.example/schemas/interoperability.schema.json",
+  "title": "InteroperabilityContract",
+  "description": "A machine-readable interoperability contract between two sovereign entities. Defines the terms under which they agree to share data, capabilities, or services.",
+  "type": "object",
+  "required": ["id", "parties", "scope", "purpose", "issued", "expires"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this interoperability contract.",
+      "examples": ["urn:uuid:interop-contract-0001"]
+    },
+    "parties": {
+      "type": "array",
+      "description": "The sovereign entities party to this contract. Minimum two parties.",
+      "items": {
+        "type": "object",
+        "required": ["id", "role"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Sovereign identifier of the party."
+          },
+          "role": {
+            "type": "string",
+            "description": "The role this party plays in the interoperability relationship.",
+            "enum": ["provider", "consumer", "broker", "auditor", "co-processor"]
+          },
+          "authorizedAgents": {
+            "type": "array",
+            "description": "Agents authorized to act on this party's behalf within this contract.",
+            "items": { "type": "string" }
+          }
+        }
+      },
+      "minItems": 2
+    },
+    "scope": {
+      "type": "object",
+      "description": "What is being shared under this contract.",
+      "required": ["dataCategories"],
+      "properties": {
+        "dataCategories": {
+          "type": "array",
+          "description": "Categories of data covered by this contract.",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "capabilities": {
+          "type": "array",
+          "description": "API endpoints or capabilities being shared.",
+          "items": { "type": "string" }
+        },
+        "excludedData": {
+          "type": "array",
+          "description": "Explicit exclusions — data that is expressly NOT covered even if within a covered category.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "purpose": {
+      "type": "string",
+      "description": "The stated purpose of this interoperability relationship. Receiving parties should only use data for this purpose."
+    },
+    "mode": {
+      "type": "string",
+      "description": "The primary mode of data exchange.",
+      "enum": ["push", "pull", "event-subscription", "delegated-execution", "federated-query", "mixed"]
+    },
+    "prohibitions": {
+      "type": "array",
+      "description": "Explicit prohibitions on how the shared data or capabilities may be used.",
+      "items": { "type": "string" },
+      "examples": [["no-secondary-sale", "no-model-training-without-consent", "no-re-identification"]]
+    },
+    "auditRights": {
+      "type": "object",
+      "description": "Audit rights granted to each party.",
+      "properties": {
+        "logRetentionPeriod": {
+          "type": "string",
+          "description": "How long interaction logs must be retained. ISO 8601 duration.",
+          "examples": ["P1Y", "P90D"]
+        },
+        "auditableBy": {
+          "type": "array",
+          "description": "Parties (or their designated auditors) who may inspect logs.",
+          "items": { "type": "string" }
+        },
+        "auditFrequency": {
+          "type": "string",
+          "description": "How often audits may occur.",
+          "enum": ["on-demand", "quarterly", "annually", "on-incident"]
+        }
+      }
+    },
+    "retentionPolicy": {
+      "type": "object",
+      "description": "How long received data may be retained.",
+      "properties": {
+        "maxRetentionDuration": {
+          "type": "string",
+          "description": "Maximum retention period for received data. ISO 8601 duration.",
+          "examples": ["P30D", "P1Y"]
+        },
+        "deleteOnContractExpiry": {
+          "type": "boolean",
+          "description": "Whether the consumer must delete all received data when the contract expires or is terminated.",
+          "default": true
+        },
+        "deleteConfirmationRequired": {
+          "type": "boolean",
+          "description": "Whether the consumer must confirm deletion to the provider.",
+          "default": false
+        }
+      }
+    },
+    "terminationTerms": {
+      "type": "object",
+      "description": "How this contract may be terminated.",
+      "properties": {
+        "noticePeriod": {
+          "type": "string",
+          "description": "Required notice period before termination. ISO 8601 duration.",
+          "examples": ["P30D", "P7D"]
+        },
+        "immediateTerminationTriggers": {
+          "type": "array",
+          "description": "Conditions under which any party may terminate immediately without notice.",
+          "items": { "type": "string" }
+        },
+        "dataDispositionOnTermination": {
+          "type": "string",
+          "description": "What happens to shared data when the contract ends.",
+          "enum": ["delete", "return", "archive", "consumer-decides"]
+        }
+      }
+    },
+    "issued": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this contract was established."
+    },
+    "expires": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this contract expires. Contracts must have an explicit expiry."
+    },
+    "terminated": {
+      "type": "boolean",
+      "description": "Whether this contract has been terminated before its expiry.",
+      "default": false
+    },
+    "terminatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this contract was terminated, if applicable."
+    }
+  },
+  "additionalProperties": false
+}

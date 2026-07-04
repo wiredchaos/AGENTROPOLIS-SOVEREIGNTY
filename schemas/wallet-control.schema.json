@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentropolis.example/schemas/wallet-control.schema.json",
+  "title": "WalletControl",
+  "description": "A sovereign wallet control record. Defines ownership and governance of a permission, value, or capability wallet — not a live financial instrument.",
+  "$comment": "This schema models sovereignty concepts only. It does not encode production wallet logic, cryptographic keys, or real transaction flows.",
+  "type": "object",
+  "required": ["id", "owner", "walletType", "created"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this wallet control record.",
+      "examples": ["urn:uuid:wallet-ctrl-0001"]
+    },
+    "owner": {
+      "type": "string",
+      "description": "The sovereign identifier of the entity that owns and controls this wallet.",
+      "examples": ["did:example:alice123"]
+    },
+    "walletType": {
+      "type": "string",
+      "description": "The category of wallet.",
+      "enum": [
+        "permission-wallet",
+        "capability-wallet",
+        "data-asset-wallet",
+        "value-attribution-wallet",
+        "identity-credential-wallet"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of what this wallet holds and its purpose."
+    },
+    "accessControls": {
+      "type": "object",
+      "description": "Who may read, modify, or delegate from this wallet.",
+      "properties": {
+        "readers": {
+          "type": "array",
+          "description": "Identifiers of entities that may read wallet contents.",
+          "items": { "type": "string" }
+        },
+        "delegates": {
+          "type": "array",
+          "description": "Identifiers of entities authorized to act on behalf of the wallet owner.",
+          "items": { "type": "string" }
+        },
+        "requiresMultiSig": {
+          "type": "boolean",
+          "description": "Whether significant wallet operations require approval from multiple authorized parties.",
+          "default": false
+        },
+        "multiSigThreshold": {
+          "type": "integer",
+          "description": "Minimum number of approvals required if requiresMultiSig is true.",
+          "minimum": 2
+        }
+      }
+    },
+    "contents": {
+      "type": "array",
+      "description": "A list of items this wallet holds (permissions, credentials, capability grants, etc.).",
+      "items": {
+        "type": "object",
+        "required": ["itemId", "itemType"],
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "description": "Reference to the item (e.g., a permission ID, credential ID)."
+          },
+          "itemType": {
+            "type": "string",
+            "description": "The type of wallet item.",
+            "enum": [
+              "permission",
+              "verifiable-credential",
+              "capability-grant",
+              "data-asset-reference",
+              "value-attribution-record"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of this item.",
+            "enum": ["active", "pending", "expired", "revoked"],
+            "default": "active"
+          }
+        }
+      }
+    },
+    "auditPolicy": {
+      "type": "object",
+      "description": "Audit requirements for operations on this wallet.",
+      "properties": {
+        "logAllAccess": {
+          "type": "boolean",
+          "description": "Whether all read and write access must be logged.",
+          "default": true
+        },
+        "retentionPeriod": {
+          "type": "string",
+          "description": "How long audit logs for this wallet must be retained. ISO 8601 duration.",
+          "examples": ["P2Y", "P6M"]
+        }
+      }
+    },
+    "recoveryPolicy": {
+      "type": "object",
+      "description": "How the wallet owner may recover control if access is lost.",
+      "$comment": "Recovery secrets, private keys, and production recovery flows are explicitly excluded from this schema.",
+      "properties": {
+        "recoveryMethod": {
+          "type": "string",
+          "description": "The type of recovery method configured.",
+          "enum": ["trusted-contacts", "institutional-custodian", "time-lock", "none"]
+        },
+        "recoveryContactCount": {
+          "type": "integer",
+          "description": "Number of trusted contacts (if method is trusted-contacts).",
+          "minimum": 1
+        }
+      }
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this wallet control record was created."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this wallet control record was last updated."
+    }
+  },
+  "additionalProperties": false
+}

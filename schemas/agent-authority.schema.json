@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentropolis.example/schemas/agent-authority.schema.json",
+  "title": "AgentAuthority",
+  "description": "The authority envelope for an AI agent. Defines what the agent may do, on whose behalf, and under what constraints.",
+  "type": "object",
+  "required": ["id", "agentId", "principalId", "scope", "actions", "issued", "expires"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this authority envelope.",
+      "examples": ["urn:uuid:auth-agent-0001"]
+    },
+    "agentId": {
+      "type": "string",
+      "description": "The identifier of the agent receiving this authority.",
+      "examples": ["did:example:agent-assistant-7"]
+    },
+    "principalId": {
+      "type": "string",
+      "description": "The identifier of the sovereign principal granting this authority.",
+      "examples": ["did:example:alice123"]
+    },
+    "principalChain": {
+      "type": "array",
+      "description": "The full chain of principals from root sovereign to immediate grantor, if this authority was delegated through intermediaries.",
+      "items": { "type": "string" }
+    },
+    "scope": {
+      "type": "object",
+      "description": "The domains and resources within which the agent is authorized to operate.",
+      "properties": {
+        "systems": {
+          "type": "array",
+          "description": "Identifiers of systems the agent may interact with.",
+          "items": { "type": "string" }
+        },
+        "dataCategories": {
+          "type": "array",
+          "description": "Categories of data the agent may access.",
+          "items": { "type": "string" },
+          "examples": [["calendar", "email-subjects", "task-list"]]
+        },
+        "memoryAccess": {
+          "type": "string",
+          "description": "What memory the agent may read or write.",
+          "enum": ["none", "own-session-only", "principal-authorized", "full"]
+        },
+        "externalComms": {
+          "type": "boolean",
+          "description": "Whether the agent may initiate communications with external systems not listed in 'systems'.",
+          "default": false
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "description": "Actions the agent is authorized to take.",
+      "items": {
+        "type": "object",
+        "required": ["action"],
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "The action name (e.g., 'send-email', 'create-calendar-event', 'query-database')."
+          },
+          "limits": {
+            "type": "object",
+            "description": "Quantitative or qualitative limits on this action.",
+            "additionalProperties": true
+          },
+          "requiresApproval": {
+            "type": "boolean",
+            "description": "Whether this specific action requires explicit principal approval before execution.",
+            "default": false
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "prohibitions": {
+      "type": "array",
+      "description": "Explicit actions the agent is prohibited from taking, regardless of other grants.",
+      "items": { "type": "string" }
+    },
+    "escalationPolicy": {
+      "type": "object",
+      "description": "How the agent should behave when it encounters situations outside its defined authority.",
+      "properties": {
+        "escalateTo": {
+          "type": "string",
+          "description": "Identifier of the principal or system to escalate to."
+        },
+        "escalationMethod": {
+          "type": "string",
+          "description": "How the agent communicates an escalation.",
+          "enum": ["notification", "queue", "pause-and-wait", "abort"]
+        },
+        "defaultOnEscalation": {
+          "type": "string",
+          "description": "Default behavior if escalation contact is unavailable.",
+          "enum": ["abort", "queue", "proceed-with-logging"]
+        }
+      }
+    },
+    "memoryPolicy": {
+      "type": "object",
+      "description": "How the agent manages memory during and after its operation.",
+      "properties": {
+        "retainSessionMemory": {
+          "type": "boolean",
+          "description": "Whether the agent retains session memory after the session ends.",
+          "default": false
+        },
+        "shareMemoryWith": {
+          "type": "array",
+          "description": "Identifiers of entities with which the agent may share memory.",
+          "items": { "type": "string" }
+        },
+        "memoryDispositionOnTermination": {
+          "type": "string",
+          "description": "What happens to agent memory when the authority is revoked or expires.",
+          "enum": ["delete", "archive-to-principal", "retain-for-audit", "principal-decides"]
+        }
+      }
+    },
+    "subDelegation": {
+      "type": "object",
+      "description": "Whether and how the agent may delegate authority to sub-agents.",
+      "properties": {
+        "permitted": {
+          "type": "boolean",
+          "description": "Whether sub-delegation is permitted at all.",
+          "default": false
+        },
+        "maxDepth": {
+          "type": "integer",
+          "description": "Maximum depth of sub-delegation chain.",
+          "minimum": 0,
+          "default": 0
+        },
+        "requiresPrincipalApproval": {
+          "type": "boolean",
+          "description": "Whether the principal must approve each sub-delegation.",
+          "default": true
+        }
+      }
+    },
+    "issued": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this authority envelope was issued."
+    },
+    "expires": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this authority expires."
+    },
+    "revoked": {
+      "type": "boolean",
+      "description": "Whether this authority has been revoked.",
+      "default": false
+    },
+    "auditLog": {
+      "type": "string",
+      "description": "URI or identifier of the audit log where agent actions under this authority are recorded."
+    }
+  },
+  "additionalProperties": false
+}

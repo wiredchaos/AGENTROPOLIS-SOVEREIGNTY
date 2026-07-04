@@ -1,0 +1,38 @@
+{
+  "$schema": "https://agentropolis.example/schemas/identity.schema.json",
+  "$comment": "Sample individual sovereignty identity record. All values are illustrative placeholders.",
+  "id": "did:example:alice-individual-123",
+  "entityType": "individual",
+  "displayName": "Alice (pseudonym)",
+  "controller": "did:example:alice-individual-123",
+  "verificationMethods": [
+    {
+      "id": "did:example:alice-individual-123#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:alice-individual-123",
+      "publicKeyMultibase": "z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK"
+    }
+  ],
+  "attributes": {
+    "region": {
+      "value": "EU",
+      "disclosurePolicy": "public"
+    },
+    "preferredLanguage": {
+      "value": "en",
+      "disclosurePolicy": "authenticated"
+    },
+    "emailHash": {
+      "value": "sha256:placeholder-hash-not-real",
+      "disclosurePolicy": "named-parties"
+    }
+  },
+  "created": "2025-01-15T09:00:00Z",
+  "updated": "2025-06-01T12:30:00Z",
+  "status": "active",
+  "_sovereigntyNote": {
+    "memoryOwnership": "All memory generated in AI interactions is owned by this individual unless explicitly transferred.",
+    "agentDelegations": "See separate agent-authority records for any agents acting on this individual's behalf.",
+    "dataPortability": "This individual retains the right to export all associated memory and data at any time."
+  }
+}
