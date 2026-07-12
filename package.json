@@ -1,0 +1,24 @@
+{
+  "name": "agentropolis-sovereignty",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --pretty false",
+    "test": "tsx --test src/tests/*.test.ts",
+    "validate:registries": "tsx src/scripts/validateRegistries.ts",
+    "validate": "pnpm typecheck && pnpm test && pnpm validate:registries"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "express": "^4.21.2",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.15.30",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "pnpm@10.28.1"
+}
