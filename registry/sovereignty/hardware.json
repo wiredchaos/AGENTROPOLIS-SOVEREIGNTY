@@ -1,0 +1,1 @@
+[{"id":"local-gpu","name":"Local sovereign GPU","location":"operator-controlled facility","networkBoundary":"local"},{"id":"private-cluster","name":"Private AGENTROPOLIS cluster","location":"private sovereign boundary","networkBoundary":"private"},{"id":"cloud-gpu","name":"Commodity cloud GPU","location":"external cloud","networkBoundary":"public-cloud"}]
