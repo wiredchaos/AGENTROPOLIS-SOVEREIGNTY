@@ -1,24 +1,37 @@
 name: Sovereignty Control Plane
+
 on:
   pull_request:
   push:
-    branches: [main, codex/import-sovereignty-control-plane]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sovereignty-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   sovereignty:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
+
       - run: npm ci --ignore-scripts
       - run: npm run typecheck
       - run: npm run test:sovereignty
       - run: npm run validate:registry
       - run: npm run build
       - run: npm test
-      - name: Install gitleaks
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/gitleaks/gitleaks/master/install.sh | sh -s -- -b /usr/local/bin
-      - run: npm run gitleaks
+
+      - name: Scan repository for secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
