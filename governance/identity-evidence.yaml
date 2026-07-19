@@ -1,0 +1,297 @@
+# Machine-readable identity audit evidence for AGENTROPOLIS-SOVEREIGNTY
+# Generated: 2026-07-19
+# Schema: agentropolis.identity-evidence.v1 (local audit artifact)
+
+repository: wiredchaos/AGENTROPOLIS-SOVEREIGNTY
+commit_reviewed: d058371101bf21c60d8a72091c92b8aa65083973
+commit_reviewed_short: d058371
+audit_date: "2026-07-19"
+auditor: cursor-cloud-agent
+audit_program: phase-3-federation-hardening
+cloud_agent_url: https://cursor.com/agents/bc-9972d3b9-c1fe-4c5b-b0d0-31fd36bad2b6
+
+role:
+  actual: sovereignty_control_plane
+  claimed_by_github_description: identity_memory_permissions_wallets_governance
+  claimed_by_readme: canonical_sovereignty_authority
+  identity_role: empty_shell
+  not:
+    - canonical_identity_authority
+    - identity_adapter
+    - wallet_identity_layer
+    - authentication_ui
+    - profile_system
+    - agent_registry
+    - credential_service
+    - legacy_identity_implementation
+
+proposed_status:
+  as_identity_layer: EMPTY-SHELL
+  as_sovereignty_layer: ACTIVE
+  do_not_mark_canonical_identity: true
+
+confidence: 0.92
+confidence_basis:
+  - full_source_tree_inspected
+  - all_tests_executed_pass
+  - no_identity_entities_in_src_schemas_registry
+  - authority_docs_absent_from_checkout
+
+owners_found:
+  github_owner: wiredchaos
+  owning_user_name: Neuro MetaX
+  owning_user_email: chaoswired@gmail.com
+  codeowners_file: absent
+  maintainers_file: absent
+
+authority_documents:
+  wiredchaos_agentropolis: not_found
+  AGENTROPOLIS-CANON.yaml: absent
+  docs/FEDERATION-HARDENING-V1.md: absent
+  governance/repository-registry.yaml: absent
+  github_issue_85: not_found_on_this_repo
+  open_issues:
+    - number: 1
+      title: Build AI Sovereignty Control Plane
+      url: https://github.com/wiredchaos/AGENTROPOLIS-SOVEREIGNTY/issues/1
+
+identity_entities:
+  human_principal:
+    present: false
+  organization:
+    present: false
+  agent:
+    present: false
+  service_account:
+    present: false
+  wallet:
+    present: false
+  device:
+    present: false
+  session:
+    present: false
+  application:
+    present: false
+  district:
+    present: false
+    notes: documentation mention only in docs/agent-runtime-position.md
+  role:
+    present: false
+  capability:
+    present: partial
+    notes: model inference capabilities only
+    locations:
+      - registry/sovereignty/models.json
+      - src/sovereignty/router.js
+  credential:
+    present: false
+    notes: static adminToken constructor argument is not a credential system
+  delegation:
+    present: false
+  mandate:
+    present: false
+
+sovereignty_entities_present:
+  - id: hardware
+    path: registry/sovereignty/hardware.json
+  - id: jurisdictions
+    path: registry/sovereignty/jurisdictions.json
+  - id: rights
+    path: registry/sovereignty/rights.json
+  - id: providers
+    path: registry/sovereignty/providers.json
+  - id: models
+    path: registry/sovereignty/models.json
+
+dependencies:
+  - name: nodejs_stdlib
+    classification: core_dependency
+    evidence: src/sovereignty/server.js,src/sovereignty/registry/validate.js
+  - name: filesystem_json_registries
+    classification: core_dependency
+    evidence: src/sovereignty/registry/validate.js
+  - name: npm_runtime_packages
+    classification: none
+    evidence: package.json
+  - name: privy
+    classification: not_present
+  - name: clerk
+    classification: not_present
+  - name: auth0
+    classification: not_present
+  - name: firebase_auth
+    classification: not_present
+  - name: supabase_auth
+    classification: not_present
+  - name: cloudflare
+    classification: not_present
+  - name: hermes
+    classification: not_present
+  - name: claw
+    classification: not_present
+  - name: nemoclaw
+    classification: not_present
+  - name: ethereum
+    classification: not_present
+  - name: solana
+    classification: not_present
+  - name: base
+    classification: not_present
+  - name: dogecoin
+    classification: not_present
+  - name: example_cloud_provider_endpoint
+    classification: optional_adapter
+    evidence: registry/sovereignty/providers.json
+  - name: gitleaks_ci
+    classification: ui_convenience
+    notes: CI secret scanning convenience
+
+control_locations:
+  authentication:
+    path: src/sovereignty/server.js
+    symbol: createAdminServer
+    mechanism: bearer_token_string_equality
+  principal_resolution:
+    path: null
+  agent_resolution:
+    path: null
+  mandate_lookup:
+    path: null
+  capability_evaluation:
+    path: src/sovereignty/router.js
+    symbol: SovereigntyRouter.allowed
+    domain: sovereignty_model_routing
+  policy_decision:
+    path: src/sovereignty/router.js
+    symbol: SovereigntyRouter.route
+  execution_permission:
+    path: null
+    notes: router returns candidate only; no execution gate
+  receipt_emission:
+    path: null
+  audit_emission:
+    path: src/sovereignty/audit.js
+    symbol: AuditLog.record
+    durability: in_memory
+  registry_validation:
+    path: src/sovereignty/registry/validate.js
+    symbol: validateRegistry
+  token_redaction:
+    path: src/sovereignty/audit.js
+
+missing_controls:
+  - human_principal_binding
+  - organization_principals
+  - agent_identity_registry
+  - accountable_human_for_every_agent
+  - mandate_issue_and_cancel
+  - bounded_revocable_expiring_delegation
+  - conflicting_mandate_hard_stop
+  - emergency_human_override
+  - session_lifecycle
+  - device_binding
+  - mfa_or_step_up
+  - wallet_link_unlink_proof
+  - nonce_replay_protection
+  - chain_id_domain_separation
+  - credential_rotation
+  - revocation_propagation_bus
+  - durable_append_only_audit
+  - agentropolis.receipt.v1
+  - agentropolis.audit.v1
+  - agentropolis.revocation.v1
+  - recovery_flows
+  - privacy_retention_deletion_export
+  - real_circuit_breaker_state
+
+tests:
+  suite_path: tests/sovereignty/
+  executed: true
+  passed: 7
+  failed: 0
+  matrix:
+    invalid_login: implemented_and_tested
+    expired_session: missing
+    revoked_session: missing
+    invalid_wallet_signature: missing
+    replayed_nonce: missing
+    unauthorized_agent: missing
+    capability_denial: implemented_and_tested
+    expired_delegation: missing
+    revoked_mandate: missing
+    conflicting_mandate: missing
+    emergency_halt: documentation_only
+    wallet_compromise: missing
+    provider_outage: implemented_but_untested
+    database_outage: missing
+    rollback: missing
+
+scores:
+  human_accountability: 0
+  identity_clarity: 0
+  wallet_separation: 0
+  revocation: 0
+  authorization_boundaries: 1
+  portability: 3
+  auditability: 1
+  recovery: 0
+  privacy: 2
+  test_coverage: 1
+  operational_readiness: 1
+
+risks:
+  - id: R1
+    severity: P0
+    title: Repository overclaims identity authority without implementation
+    impact: Federation may incorrectly treat this repo as identity source of truth
+  - id: R2
+    severity: P0
+    title: Shared static admin bearer with timing-unsafe compare
+    location: src/sovereignty/server.js
+  - id: R3
+    severity: P0
+    title: Circuit breaker reset audits but does not reset state
+    location: src/sovereignty/server.js
+  - id: R4
+    severity: P1
+    title: No federation receipt/audit/revocation schemas
+  - id: R5
+    severity: P1
+    title: In-memory audit loss on process restart
+    location: src/sovereignty/audit.js
+  - id: R6
+    severity: P2
+    title: Identity doctrine docs may mislead implementers
+    location: docs/AI-SOVEREIGNTY-CONTINGENCY-PLAN.md
+
+remediation_priorities:
+  - priority: P0
+    actions:
+      - register_identity_status_EMPTY-SHELL
+      - stop_treating_repo_as_identity_authority
+      - harden_or_isolate_admin_bearer_before_any_non_localhost_exposure
+  - priority: P1
+    actions:
+      - audit_sibling_identity_candidates
+      - introduce_or_select_canonical_identity_repo
+      - add_receipt_audit_revocation_contracts_there
+  - priority: P2
+    actions:
+      - align_github_description_with_sovereignty_scope
+      - add_identity_boundary_statement_to_readme
+  - priority: P3
+    actions:
+      - create_governance_repository_registry_from_evidence
+      - link_issue_1_to_audit_artifacts
+
+sibling_candidates_for_identity_audit:
+  - wiredchaos/AGENTROPOLIS-ATG
+  - wiredchaos/AGENTROPOLIS-PAY-PROTOCOL
+  - wiredchaos/AGENTROPOLIS-ONTOLOGY
+
+codex_required_next: true
+
+artifacts:
+  evidence_audit: docs/audits/IDENTITY-EVIDENCE-AUDIT.md
+  remediation_plan: docs/audits/IDENTITY-REMEDIATION-PLAN.md
+  proposed_registry_patch: docs/audits/IDENTITY-REMEDIATION-PLAN.md#proposed-patch-governancerepository-registryyaml
